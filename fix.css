@@ -10,3 +10,12 @@
 .portrait-wrap:hover:after{opacity:1}
 body.light .portrait-wrap:after{background:radial-gradient(circle,rgba(118,82,201,.14),transparent 65%)}
 @media(max-width:900px){.portrait-reveal{display:none}.portrait-wrap:after{display:none}.portrait-wrap .portrait.gray{filter:grayscale(1) contrast(1.08) brightness(.92)}}
+
+/* Hero portrait: the goo is a mask that reveals the color source; it is never an opaque layer. */
+.portrait-wrap{isolation:isolate}
+.portrait-svg{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+.portrait-svg image{width:100%;height:100%}
+.portrait-svg #blobGroup{transform-box:fill-box;transform-origin:center}
+.portrait-wrap .portrait-gray{position:absolute;z-index:1}
+.portrait-shadow{z-index:0!important}
+@media(max-width:900px){.portrait-svg{display:none!important}}
