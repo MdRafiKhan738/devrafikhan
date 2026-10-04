@@ -19,3 +19,9 @@ body.light .portrait-wrap:after{background:radial-gradient(circle,rgba(118,82,20
 .portrait-wrap .portrait-gray{position:absolute;z-index:1}
 .portrait-shadow{z-index:0!important}
 @media(max-width:900px){.portrait-svg{display:none!important}}
+
+.collab{position:relative;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:32px;overflow:hidden}
+.collab-portrait{position:relative;width:180px;height:300px;align-self:end;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.collab-portrait::after{content:"";position:absolute;inset:12% 0 0;background:radial-gradient(circle at 50% 55%,rgba(154,108,255,.15),transparent 65%);filter:blur(24px);z-index:0}
+.collab-portrait img{position:relative;z-index:1;height:100%;width:100%;object-fit:contain;object-position:center bottom;filter:grayscale(1) contrast(1.08);mix-blend-mode:screen}
+@media(max-width:900px){.collab{grid-template-columns:1fr}.collab-portrait{width:150px;height:230px;order:2}.collab .btn{order:3;justify-self:start}}
