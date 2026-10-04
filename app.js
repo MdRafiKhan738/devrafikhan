@@ -1,5 +1,5 @@
 const API=(document.querySelector('meta[name="api-base"]')?.content||"/api").replace(/\/$/,"");
-const fallback={name:"Mohammad Rafi Khan",email:"rafi@webin.agency",phone:"+8801831-624571",location:"Dhaka, Bangladesh",github:"https://github.com/MdRafiKhan738",linkedin:"https://www.linkedin.com/",facebook:"https://www.facebook.com/",whatsapp:"https://wa.me/8801831624571",x:"https://x.com/",stack:["React","Next.js","Node.js","Express","MongoDB","Redis","React Native","TypeScript","Git","VS Code"]};
+const fallback={name:"Mohammad Rafi Khan",email:"rafi@webin.agency",phone:"+8801831-624571",location:"Dhaka, Bangladesh",github:"https://github.com/MdRafiKhan738",linkedin:"",facebook:"",whatsapp:"https://wa.me/8801831624571",x:"",stack:["React","Next.js","Node.js","Express","MongoDB","Redis","React Native","TypeScript","Git","VS Code"],portrait:"https://developerrafikhan.vercel.app/assets/images/site/portrait.webp"};
 async function api(path,opt={}){try{const r=await fetch(API+path,{headers:{"Content-Type":"application/json",...(opt.headers||{})},...opt});return r.ok?r.json():null}catch{return null}}
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"","\"":"&quot;","'":"&#039;"}[m]||m));
 function clock(){const d=new Date();let h=d.getHours();const ap=h>=12?"PM":"AM";h=h%12||12;document.getElementById("clock").textContent=String(h).padStart(2,"0")+" : "+String(d.getMinutes()).padStart(2,"0")+" "+ap}
@@ -12,6 +12,7 @@ const projectsR=await api("/projects");const projects=projectsR?.projects||[
 {title:"Shadamon Investment Platform",slug:"shadamon-investment",category:"SaaS",year:"2026",heroImage:"https://developerrafikhan.vercel.app/assets/images/projects/wonderscore/hero.webp",description:"Investor and business-owner marketplace."}
 ];
 const site=(await api("/site"))?.site||fallback;
+if(site.portrait){const imgs=document.querySelectorAll(".portrait");imgs.forEach(i=>i.src=site.portrait)}
 document.getElementById("stack").innerHTML=(site.stack||fallback.stack).map(x=>"<span>"+esc(x)+"</span>").join("");
 document.getElementById("socials").innerHTML=[["Gh",site.github],["in",site.linkedin],["f",site.facebook],["Wa",site.whatsapp],["X",site.x]].filter(x=>x[1]).map(x=>"<a href=\""+x[1]+"\">"+x[0]+"</a>").join("");
 document.getElementById("projects").innerHTML=projects.slice(0,4).map(p=>"<a class=\"project\" href=\"project.html?slug="+encodeURIComponent(p.slug)+"\"><img src=\""+p.heroImage+"\" alt=\"\"/><small>"+esc(p.category)+" · "+esc(p.year)+"</small><h3>"+esc(p.title)+"</h3></a>").join("");
