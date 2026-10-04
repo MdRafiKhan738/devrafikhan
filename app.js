@@ -1,0 +1,21 @@
+const API=(document.querySelector('meta[name="api-base"]')?.content||"/api").replace(/\/$/,"");
+const fallback={name:"Mohammad Rafi Khan",email:"rafi@webin.agency",phone:"+8801831-624571",location:"Dhaka, Bangladesh",github:"https://github.com/MdRafiKhan738",linkedin:"https://www.linkedin.com/",facebook:"https://www.facebook.com/",whatsapp:"https://wa.me/8801831624571",x:"https://x.com/",stack:["React","Next.js","Node.js","Express","MongoDB","Redis","React Native","TypeScript","Git","VS Code"]};
+async function api(path,opt={}){try{const r=await fetch(API+path,{headers:{"Content-Type":"application/json",...(opt.headers||{})},...opt});return r.ok?r.json():null}catch{return null}}
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"","\"":"&quot;","'":"&#039;"}[m]||m));
+function clock(){const d=new Date();let h=d.getHours();const ap=h>=12?"PM":"AM";h=h%12||12;document.getElementById("clock").textContent=String(h).padStart(2,"0")+" : "+String(d.getMinutes()).padStart(2,"0")+" "+ap}
+document.getElementById("theme")?.addEventListener("click",()=>{document.body.classList.toggle("light");localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark")});
+if(localStorage.getItem("theme")==="light")document.body.classList.add("light");
+const projectsR=await api("/projects");const projects=projectsR?.projects||[
+{title:"Webin — Business Website",slug:"webin-business-website",category:"Web Development",year:"2026",heroImage:"https://developerrafikhan.vercel.app/assets/images/projects/softunebd/hero.webp",description:"A conversion-first business website for a digital agency."},
+{title:"OneCart — E-Commerce Platform",slug:"onecart-ecommerce",category:"Full-Stack",year:"2026",heroImage:"https://developerrafikhan.vercel.app/assets/images/projects/hoteleasy/hero.webp",description:"A scalable commerce foundation with auth, cart, reviews and orders."},
+{title:"AI Workflow Studio",slug:"ai-workflow-studio",category:"AI / Automation",year:"2026",heroImage:"https://developerrafikhan.vercel.app/assets/images/projects/zinetic/hero.webp",description:"Lead scoring and workflow automation tooling."},
+{title:"Shadamon Investment Platform",slug:"shadamon-investment",category:"SaaS",year:"2026",heroImage:"https://developerrafikhan.vercel.app/assets/images/projects/wonderscore/hero.webp",description:"Investor and business-owner marketplace."}
+];
+const site=(await api("/site"))?.site||fallback;
+document.getElementById("stack").innerHTML=(site.stack||fallback.stack).map(x=>"<span>"+esc(x)+"</span>").join("");
+document.getElementById("socials").innerHTML=[["Gh",site.github],["in",site.linkedin],["f",site.facebook],["Wa",site.whatsapp],["X",site.x]].filter(x=>x[1]).map(x=>"<a href=\""+x[1]+"\">"+x[0]+"</a>").join("");
+document.getElementById("projects").innerHTML=projects.slice(0,4).map(p=>"<a class=\"project\" href=\"project.html?slug="+encodeURIComponent(p.slug)+"\"><img src=\""+p.heroImage+"\" alt=\"\"/><small>"+esc(p.category)+" · "+esc(p.year)+"</small><h3>"+esc(p.title)+"</h3></a>").join("");
+if(projects[0]){document.getElementById("preview").style.backgroundImage=\"url('"+projects[0].heroImage+"')\";document.getElementById("btitle").textContent=projects[0].title;document.getElementById("bdesc").textContent=projects[0].description;document.getElementById("blink").href="project.html?slug="+encodeURIComponent(projects[0].slug)}
+const ring=document.getElementById("ring");projects.forEach((p,i)=>{const c=document.createElement("a");c.className="ring-card";c.href="project.html?slug="+encodeURIComponent(p.slug);c.innerHTML="<img src=\""+p.heroImage+"\" alt=\"\"/>";ring.appendChild(c);const a=(Math.PI*2*i/projects.length)-Math.PI/2;gsap.set(c,{x:Math.cos(a)*650,y:Math.sin(a)*70,z:Math.sin(a)*220,rotationY:a*180/Math.PI+90})});
+if(window.gsap){gsap.from(".hero-copy>*",{y:22,opacity:0,stagger:.08,duration:.9,ease:"power3.out"});gsap.from(".portrait-wrap",{y:25,opacity:0,duration:1,ease:"power3.out"})}
+clock();setInterval(clock,1000);
