@@ -78,7 +78,7 @@ async function seed() {
     socials: { github: "https://github.com/MdRafiKhan738", linkedin: "", facebook: "", whatsapp: process.env.PUBLIC_PHONE ? "https://wa.me/" + String(process.env.PUBLIC_PHONE).replace(/\\D/g, "") : "", x: "", youtube: "" },
     stack: ["React", "Next.js", "Node.js", "Express", "MongoDB", "Redis", "React Native", "TypeScript", "Git", "VS Code"],
     heroCopy: { eyebrow: "Hi, I’m Mohammad Rafi Khan", titleLineOne: "Full-Stack", titleLineTwo: "Software Engineer", description: "I build modern web applications, SaaS products and backend systems with clean architecture and practical UX.", quote: "I help founders ship software that scales without leaving a fragile MVP behind." },
-    portrait: "assets/images/rafi-portrait.webp.b64", portraitColor: "assets/images/rafi-portrait.webp.b64", signature: "Rafi Khan"
+    portraitImage: "assets/images/rafi-portrait.webp.b64", portraitColorImage: "assets/images/rafi-portrait.webp.b64", collabImage: "assets/images/rafi-portrait.webp.b64", signature: "Rafi Khan"
   };
   for (const [key, value] of Object.entries(defaults)) await Site.findOneAndUpdate({ key }, { key, value }, { upsert: true, setDefaultsOnInsert: true });
   if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD && !await User.exists({ role: "admin" })) await User.create({ name: "Rafi Admin", email: process.env.ADMIN_EMAIL.toLowerCase(), passwordHash: await bcrypt.hash(process.env.ADMIN_PASSWORD, 12), role: "admin" });
