@@ -120,4 +120,4 @@ app.put("/api/admin/messages/:id", async (req, res) => res.json({ success: true,
 app.put("/api/admin/guestbook/:id", async (req, res) => { const status = ["pending", "approved", "rejected"].includes(req.body?.status) ? req.body.status : (req.body?.approved ? "approved" : "pending"); res.json({ success: true, entry: await Guest.findByIdAndUpdate(req.params.id, { status }, { new: true }).lean() }); });
 
 app.use((err, _, res, __) => { console.error(err); res.status(500).json({ success: false, message: "Internal server error" }); });
-mongoose.connect(process.env.MONGODB_URI).then(seed).then(() => app.listen(PORT, () => console.log("DevRafiKhan API running on " + PORT))).catch(error => { console.error(error); process.exit(1); });
+const dbReady = mongoose.connect(process.env.MONGODB_URI).then(seed);\nif (!process.env.VERCEL) {\n  dbReady.then(() => app.listen(PORT, () => console.log("DevRafiKhan API running on " + PORT))).catch(error => { console.error(error); process.exit(1); });\n}\nexport default async function handler(req, res) {\n  await dbReady;\n  return app(req, res);\n}
