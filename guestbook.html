@@ -1,1 +1,46 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Guestbook — Mohammad Rafi Khan</title><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/rafi-theme.css"></head><body><div data-layout="header"></div><main><section class="p-hero" style="min-height:760px"><div class="container" style="padding-top:180px;padding-bottom:120px"><p class="eyebrow gold hero-in">Guestbook</p><div class="contact-inner"><div><h1 class="p-h1 hero-in">Leave a note.</h1><p class="contact-note hero-in">A small message for the next visitor.</p></div><form id="guest-form" class="contact-card hero-in"><div class="contact-card-in"><label class="field"><span class="meta">Name</span><input name="name" required placeholder="Your name"></label><label class="field"><span class="meta">Email</span><input name="email" type="email" placeholder="Optional"></label><label class="field"><span class="meta">Message</span><textarea name="message" rows="4" required placeholder="Write something thoughtful..."></textarea></label><div class="contact-foot"><p id="guest-msg">Messages are moderated before appearing publicly.</p><button class="btn btn-outline dark" type="submit"><span class="btn-txt">Sign guestbook</span></button></div></div></form></div><div class="folder" style="margin-top:70px"><span class="folder-tab">NOTES_FROM_VISITORS</span><div id="guest-list" class="archive-grid" style="columns:1"></div></div></div></section><div data-layout="footer"></div></main><script src="js/layout.js"></script><script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script><script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script><script>const G="https://devrafikhanbackend.onrender.com/api/guestbook";const esc=s=>String(s??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));async function load(){const r=await fetch(G);const d=await r.json();document.getElementById("guest-list").innerHTML=(d.entries||[]).map(x=>'<article style="padding:22px 0;border-bottom:1px solid var(--line-d)"><p class="eyebrow gold">'+esc(x.name)+'</p><p style="margin-top:8px;font:400 26px/1.15 var(--serif);max-width:760px">'+esc(x.message)+'</p></article>').join("")||'<p class="muted">No approved notes yet.</p>'}load().catch(()=>{});document.getElementById("guest-form").addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(e.currentTarget),m=document.getElementById("guest-msg");try{const r=await fetch(G,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(f))});const d=await r.json();if(!r.ok)throw new Error(d.message||"Could not submit");m.textContent=d.message||"Submitted for approval.";e.currentTarget.reset()}catch(err){m.textContent=err.message}});</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guestbook — Mohammad Rafi Khan</title>
+<meta name="description" content="Leave a note in Mohammad Rafi Khan's guestbook.">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/rafi-theme.css">
+</head>
+<body class="page-contact">
+<div data-layout="header"></div>
+<main>
+<section class="section" style="padding-top:180px">
+ <div class="container">
+  <div class="guestbook-layout">
+   <div>
+    <p class="eyebrow gold hero-in">Guestbook</p>
+    <h1 class="guestbook-title hero-in">Leave a<br><em>note.</em></h1>
+    <p class="guestbook-note hero-in">A small message for the next visitor. Thoughtful notes are moderated before they appear here.</p>
+    <form id="guest-form" class="guestbook-form hero-in">
+      <label class="field"><span class="meta">Name</span><input name="name" required placeholder="Your name"></label>
+      <label class="field"><span class="meta">Email <span class="muted">(optional)</span></span><input name="email" type="email" placeholder="Your email"></label>
+      <label class="field"><span class="meta">Message</span><textarea name="message" required placeholder="Write something thoughtful..."></textarea></label>
+      <div class="contact-foot" style="margin-top:20px;display:flex;justify-content:space-between;gap:20px;align-items:center">
+        <p id="guest-msg" class="muted">Messages are moderated before appearing publicly.</p>
+        <button type="submit" class="btn btn-white"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Sign guestbook</span></button>
+      </div>
+    </form>
+   </div>
+   <div class="guestbook-list" id="guest-list"></div>
+  </div>
+ </div>
+</section>
+<div data-layout="footer"></div>
+</main>
+<script src="js/layout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script>
+const G='https://devrafikhanbackend.onrender.com/api/guestbook';
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const render=rows=>document.getElementById('guest-list').innerHTML=rows.length?rows.map(x=>'<article class="guestbook-entry"><div class="name">'+esc(x.name)+'</div><div class="message">'+esc(x.message)+'</div><div class="date">'+new Date(x.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})+'</div></article>').join(''):'<p class="muted">No approved notes yet.</p>';
+async function load(){const r=await fetch(G);const d=await r.json();render(d.entries||[])}load().catch(()=>{});
+document.getElementById('guest-form').addEventListener('submit',async e=>{e.preventDefault();const m=document.getElementById('guest-msg');try{const r=await fetch(G,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||'Could not submit');m.textContent=d.message||'Submitted for approval.';e.currentTarget.reset()}catch(err){m.textContent=err.message}});
+</script>
+</body></html>
