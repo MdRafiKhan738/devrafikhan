@@ -89,7 +89,7 @@
       <img src="assets/icons/calendly-icon.png" alt="" /><span>Book a meeting</span>
     </button>
     <a href="mailto:NextJS061@gmail.com" class="dock-btn dock-ghost">
-      <img src="assets/icons/gmail-icon.png" alt="" /><span>NextJS061@gmail.com</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
+      <img src="assets/icons/gmail-icon.png" alt="" /><span>Email me</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
     </a>
   </aside>`;
   document.body.insertAdjacentHTML('beforeend', DOCK);
