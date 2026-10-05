@@ -106,20 +106,25 @@ gsap.utils.toArray('.bp').forEach((img) => {
   const form = document.getElementById('contact-form');
   if (!form) return;
   const msg = form.querySelector('.form-msg');
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(form));
     if (!d.name.trim() || !d.message.trim() || !/^\S+@\S+\.\S+$/.test(d.email)) {
       msg.textContent = 'Please fill in your name, a valid email and a short message.';
       return;
+    }    try {
+      const r = await fetch(API_BASE + '/contact', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({name:d.name,email:d.email,message:d.message})
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.message || 'Unable to send');
+      msg.textContent = 'Your message was sent successfully. I’ll get back to you soon.';
+      form.reset();
+    } catch(error) {
+      msg.textContent = 'Unable to send right now. Please email me directly at ' + CONTACT_EMAIL + '.';
     }
-    const subject = encodeURIComponent(`New project enquiry from ${d.name}`);
-    const body = encodeURIComponent(`${d.message}\n\n- ${d.name} (${d.email})`);
-    try { const r = await fetch(API_BASE + '/contact', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:d.name,email:d.email,message:d.message})}); const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.message || 'Unable to send'); msg.textContent='Your message was sent successfully. I’ll get back to you soon.'; form.reset(); } catch(error) { msg.textContent='Unable to send right now. Please email me directly at ' + CONTACT_EMAIL + '.'; }
-    // if the visitor has no mail app configured, mailto: silently does nothing -
-    // copy the message so it's never a dead end either way
-    if (navigator.clipboard) navigator.clipboard.writeText(`${d.message}\n\n- ${d.name} (${d.email})`).catch(() => {});
-    msg.textContent = `Opening your email app… No mail app? Your message was copied - paste it to ${CONTACT_EMAIL}.`;
   });
 })();
 
