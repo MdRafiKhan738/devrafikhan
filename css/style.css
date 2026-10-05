@@ -272,11 +272,11 @@ ul { list-style: none; }
 :root { --portrait-shadow: drop-shadow(0 12px 18px rgba(0,0,0,.35)) drop-shadow(-26px 10px 40px rgba(0,0,0,.4)) drop-shadow(8px 6px 14px rgba(0,0,0,.18)); }
 .portrait-anim { position: absolute; inset: 0; filter: var(--portrait-shadow); }
 .portrait-gray, .portrait-color { position: absolute; inset: 0; width: 100%; height: 100%; }
-.portrait-gray { filter: grayscale(1) contrast(1.05); }
+.portrait-gray { filter: grayscale(1) contrast(.84) brightness(1.08); }
 .portrait-color { opacity: 0; } /* faded in/out by JS alongside the blob grow/shrink, not an instant swap */
 /* small screens have no hover, so show the hero portrait in full colour there */
 @media (max-width: 809px) {
-  .portrait-gray { filter: none; }
+  .portrait-gray { filter: grayscale(1) contrast(.84) brightness(1.08); }
   .portrait-color { display: none; }
 }
 .hero-fade {
