@@ -3,7 +3,7 @@
    Loads after main.js, so gsap, ScrollTrigger, lenis, reduced and countUp exist.
    --------------------------------------------------------- */
 const API_BASE = 'https://devrafikhanbackend.onrender.com/api';
-const CONTACT_EMAIL = 'rafi@webin.agency';
+const CONTACT_EMAIL = 'nextjs061@gmail.com';
 
 /* Page intro: the top-of-page text blurs up in sequence (same feel as the home hero) */
 gsap.fromTo('.hero-in',
