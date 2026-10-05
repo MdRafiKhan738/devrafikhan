@@ -64,10 +64,10 @@
       <div class="container footer-inner">
         <p class="meta avail">Available for projects</p>
         <p class="collab gold">Let's Collab</p>
-        <div class="footer-portrait"><img class="fp-img" src="https://raw.githubusercontent.com/MdRafiKhan738/developerrafikhan/main/assets/images/site/portrait-bw.webp" alt="" /></div>
+        <div class="footer-portrait"><img class="fp-img" src="assets/images/rafi-portrait.webp" alt="" /></div>
 
         <div class="footer-contact">
-          <p class="meta">Mail</p><a href="#" data-site-email class="f-big flip">Email</a>
+          <p class="meta">Mail</p><a href="#" data-site-email class="f-big flip">NextJS061@gmail.com</a>
           <p class="meta">WhatsApp/Telegram</p><a href="#" data-site-phone target="_blank" rel="noopener" class="f-big flip">+88 01831-624571</a>
         </div>
         <div class="footer-social">${SOCIAL_TEXT}</div>
