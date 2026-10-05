@@ -1,4 +1,4 @@
-const API=(document.querySelector('meta[name="api-base"]')?.content||'/api').replace(/\/$/,'');
+const API=(document.querySelector('meta[name="api-base"]')?.content||'https://devrafikhanbackend.onrender.com/api').replace(/\/$/,'');
 const token=localStorage.getItem('rafi-token');
 if(!token)location.href='login.html';
 
