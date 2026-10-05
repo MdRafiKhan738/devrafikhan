@@ -69,8 +69,8 @@ const cleanArticle = value => sanitizeHtml(String(value || ""), {
   allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt", "width", "height"] },
   allowedSchemes: ["http", "https", "mailto"]
 });
-const makeToken = user => jwt.sign({ id: user._id.toString(), role: user.role, email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "2d" });
-const auth = (req, res, next) => { try { req.user = jwt.verify(String(req.headers.authorization || "").replace(/^Bearer\\s+/, ""), process.env.JWT_SECRET); next(); } catch { res.status(401).json({ success: false, message: "Authentication required" }); } };
+const makeToken = user => jwt.sign({ id: user._id.toString(), role: user.role, email: user.email }, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "2d" });
+const auth = (req, res, next) => { try { req.user = jwt.verify(String(req.headers.authorization || "").replace(/^Bearer\\s+/, ""), JWT_SECRET); next(); } catch { res.status(401).json({ success: false, message: "Authentication required" }); } };
 const editor = (req, res, next) => ["admin", "editor"].includes(req.user?.role) ? next() : res.status(403).json({ success: false, message: "Insufficient permissions" });
 
 async function seed() {
