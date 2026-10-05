@@ -88,8 +88,8 @@
     <button type="button" class="dock-btn dock-primary" data-calendly="${CALENDLY_URL}">
       <img src="assets/icons/calendly-icon.png" alt="" /><span>Book a meeting</span>
     </button>
-    <a href="mailto:kallol.business.ds@gmail.com" class="dock-btn dock-ghost">
-      <img src="assets/icons/gmail-icon.png" alt="" /><span>Email me</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
+    <a href="mailto:NextJS061@gmail.com" class="dock-btn dock-ghost">
+      <img src="assets/icons/gmail-icon.png" alt="" /><span>NextJS061@gmail.com</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
     </a>
   </aside>`;
   document.body.insertAdjacentHTML('beforeend', DOCK);
@@ -121,7 +121,7 @@
   applyTheme(localStorage.getItem('rafi-theme') === 'light');
   document.querySelectorAll('#themeToggle,#themeToggleMobile').forEach((b) => b.addEventListener('click', () => applyTheme(!document.body.classList.contains('light'))));
   fetch('https://devrafikhanbackend.onrender.com/api/site').then(r => r.json()).then(({site}) => {
-    document.querySelectorAll('[data-site-email]').forEach((el) => { const email = site?.email || ''; el.textContent = email || 'Email'; if (el.tagName === 'A') el.href = email ? 'mailto:' + email : '#'; });
+    document.querySelectorAll('[data-site-email]').forEach((el) => { const email = 'NextJS061@gmail.com'; el.textContent = email; if (el.tagName === 'A') el.href = email ? 'mailto:' + email : '#'; });
     document.querySelectorAll('[data-site-phone]').forEach((el) => { const phone = site?.phone || ''; el.textContent = phone; if (el.tagName === 'A') el.href = phone ? 'https://wa.me/' + phone.replace(/\D/g,'') : '#'; });
   }).catch(() => {});
   // highlight the current page in the navigation
