@@ -29,7 +29,7 @@
       <a href="about.html" class="flip">About</a>
       <a href="works.html" class="flip">Works</a>
       <a href="contact.html" class="flip">Contact</a>
-      <a href="blog.html" class="flip">Blog</a>
+      <a href="blog.html" class="flip">Blog</a><a href="resume.html" class="flip">Resume</a>
     </nav>
     <button type="button" class="theme-toggle hide-m" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
     <a href="contact.html" class="btn btn-outline hide-m"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Start a project</span></a>
@@ -74,7 +74,7 @@
         <a href="contact.html" class="btn btn-white footer-btn"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Start a project</span></a>
         <div class="footer-nav">
           <p class="eyebrow gold">Navigation</p>
-          <a href="about.html" class="flip">About</a><a href="works.html" class="flip">Works</a><a href="blog.html" class="flip">Blog</a><a href="contact.html" class="flip">Contact</a><a href="guestbook.html" class="flip">Guestbook</a><a href="login.html" class="flip">Sign in</a>
+          <a href="about.html" class="flip">About</a><a href="works.html" class="flip">Works</a><a href="blog.html" class="flip">Blog</a><a href="contact.html" class="flip">Contact</a><a href="guestbook.html" class="flip">Guestbook</a><a href="resume.html" class="flip">Resume</a><a href="login.html" class="flip">Sign in</a>
           <div class="footer-bottom"><span>©2026 Mohammad Rafi Khan</span><span>All rights reserved</span></div>
         </div>
       </div>
@@ -121,9 +121,23 @@
   applyTheme(localStorage.getItem('rafi-theme') === 'light');
   document.querySelectorAll('#themeToggle,#themeToggleMobile').forEach((b) => b.addEventListener('click', () => applyTheme(!document.body.classList.contains('light'))));
   fetch('https://devrafikhanbackend.onrender.com/api/site').then(r => r.json()).then(({site}) => {
-    document.querySelectorAll('[data-site-email]').forEach((el) => { const email = 'NextJS061@gmail.com'; el.textContent = email; if (el.tagName === 'A') el.href = email ? 'mailto:' + email : '#'; });
+    document.querySelectorAll('[data-site-email]').forEach((el) => { const email = site?.email || 'nextjs061@gmail.com'; el.textContent = email; if (el.tagName === 'A') el.href = email ? 'mailto:' + email : '#'; });
     document.querySelectorAll('[data-site-phone]').forEach((el) => { const phone = site?.phone || ''; el.textContent = phone; if (el.tagName === 'A') el.href = phone ? 'https://wa.me/' + phone.replace(/\D/g,'') : '#'; });
   }).catch(() => {});
+  // CMS runtime: local time, dynamic media, reviews/reactions.
+  const API='https://devrafikhanbackend.onrender.com/api';
+  const tickClock=()=>document.querySelectorAll('[data-clock]').forEach(el=>{const d=new Date();let h=d.getHours(),m=d.getMinutes(),s=d.getSeconds();const ap=h>=12?'PM':'AM';h=h%12||12;el.textContent=`${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')} ${ap}`;});
+  tickClock();setInterval(tickClock,1000);
+  const cmsCss=document.createElement('style');cmsCss.textContent='.clock{display:inline-block!important;visibility:visible!important;opacity:1!important}iconify-icon{display:inline-block;width:1em;height:1em}';document.head.appendChild(cmsCss);
+  const replaceAssets=async()=>{try{const r=await fetch(API+'/assets');const d=await r.json();const map=new Map((d.assets||[]).map(a=>[a.key,a]));document.querySelectorAll('img[src],video[src],source[src]').forEach(el=>{const a=map.get(el.getAttribute('src')||'');if(a?.url)el.setAttribute('src',a.url)});document.querySelectorAll('[data-cms-asset]').forEach(el=>{const a=map.get(el.dataset.cmsAsset);if(a?.url)el.src=a.url})}catch{}};
+  replaceAssets();
+  const loadReviews=async()=>{const root=document.querySelector('.testi-card');if(!root)return;try{const r=await fetch(API+'/reviews');const reviews=r.reviews||[];const slides=root.querySelector('.testi-slides');if(slides&&reviews.length){slides.innerHTML=reviews.map((x,i)=>{const safe=String(x.text||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));return `<figure class="testi-slide ${i===0?'active':''}"><blockquote>${safe}</blockquote><figcaption><img src="${x.image||'assets/images/avatars/avatar-1.webp'}" alt=""><span class="testi-who"><span class="name">${String(x.clientName||'Client')}</span><span class="role">${String(x.role||'')} ${x.company?'· '+String(x.company):''}</span></span></figcaption></figure>`}).join('')}}
+    let index=0;const draw=()=>{const items=[...root.querySelectorAll('.testi-slide')];items.forEach((x,i)=>x.classList.toggle('active',i===index));};root.querySelectorAll('.testi-nav button').forEach(b=>b.onclick=()=>{const items=root.querySelectorAll('.testi-slide');if(!items.length)return;index=(index+(Number(b.dataset.dir)||1)+items.length)%items.length;draw()});
+  }catch{}};
+  loadReviews();
+  const reactionTarget='homepage',reactionCount=async()=>{try{const r=await fetch(API+'/reactions/'+reactionTarget);const el=document.querySelector('.testi-react-count');if(el&&r.ok){const d=await r.json();el.textContent=d.count}}catch{}};
+  reactionCount();setInterval(reactionCount,5000);
+  document.addEventListener('click',async e=>{const b=e.target.closest('.testi-react');if(!b)return;try{const r=await fetch(API+'/reactions/'+reactionTarget,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:localStorage.getItem('rafi-name')||'Anonymous visitor'})});const d=await r.json();if(r.ok&&d.count!==undefined){const el=b.querySelector('.testi-react-count');if(el)el.textContent=d.count}else if(d.alreadyReacted)b.classList.add('reacted')}catch{}});
   // highlight the current page in the navigation
   const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   const section = { 'work.html': 'works.html', 'post.html': 'blog.html' }[here] || here;
