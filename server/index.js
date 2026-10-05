@@ -8,13 +8,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
 import sanitizeHtml from "sanitize-html";
+import crypto from "node:crypto";
 
 const app = express();
 const PORT = Number(process.env.PORT || 5050);
 const origins = (process.env.CLIENT_URL || "").split(",").map(v => v.trim()).filter(Boolean);
 
 if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI is required");
-if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is required");
+const JWT_SECRET = process.env.JWT_SECRET || crypto.createHash("sha256").update(process.env.MONGODB_URI + "::devrafikhan-jwt").digest("hex");
 
 app.set("trust proxy", 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
