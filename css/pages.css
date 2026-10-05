@@ -1,0 +1,279 @@
+/* =========================================================
+   Inner pages: About, Works, Contact, Blog, project detail, blog post.
+   Builds on the tokens and components in style.css.
+   ========================================================= */
+
+/* pages without a full-bleed hero start below the header */
+.p-top { padding-top: 180px; }
+.p-h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 4.45vw, 64px); line-height: 1; letter-spacing: -0.04em; }
+.header-nav a[aria-current="page"], .footer-nav a[aria-current="page"], .mm-links a[aria-current="page"] .mm-txt { color: var(--gold); }
+
+/* shared full-bleed image hero (About, Contact) */
+.p-hero { position: relative; overflow: hidden; }
+.p-hero-bg { position: absolute; inset: 0; }
+/* extra height (was 115%) gives the more aggressive parallax drift room to move without showing an edge */
+.p-hero-bg img { width: 100%; height: 140%; object-fit: cover; filter: grayscale(.9) brightness(.42) sepia(.2); }
+.p-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--ink)); pointer-events: none; }
+
+/* ---------------- Word-by-word text reveal (.word-in - see js/pages.js) ----------------
+   Each word sits in its own overflow-hidden mask and slides up into place, one after another,
+   instead of the whole block fading up as one piece. */
+.word-mask { display: inline-block; overflow: hidden; vertical-align: top; }
+.word-inner { display: inline-block; will-change: transform, opacity; }
+
+/* ---------------- About ---------------- */
+.about-hero { height: 100vh; min-height: 720px; max-height: 900px; }
+.about-hero-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 110px 28%; } /* headline starts about a third across, like the reference */
+.about-hero-inner .p-h1 { margin: 20px 0 24px; }
+.about-hero-note { max-width: 470px; margin-left: 25%; font-size: 16px; line-height: 1.45; color: var(--pale); }
+
+.origins { display: grid; grid-template-columns: 568px 1fr; gap: 24px; padding: 100px 0 160px; }
+/* the photo is taller than its frame so it can drift inside it (parallax, see pages.js) */
+.origins-img { position: relative; overflow: hidden; aspect-ratio: 568 / 760; }
+.origins-img img { width: 100%; height: 148%; object-fit: cover; }
+/* scrim behind the caption so it stays readable over any photo */
+.origins-img::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(transparent, rgba(0,0,0,.75) 80%); pointer-events: none; }
+.origins-img figcaption { z-index: 1; position: absolute; left: 24px; right: 24px; bottom: 24px; font-family: var(--serif); font-size: 18px; line-height: 1.15; letter-spacing: -0.03em; color: #fff; }
+.origins-text { display: flex; flex-direction: column; justify-content: space-between; padding-top: 40px; }
+.origins-giant { position: relative; }
+.origins-giant .giant:first-child { padding-left: 16%; }
+.origins-g2 { text-align: right; margin-top: 8px; }
+.origins-giant .giant-note { top: 0; right: 0; width: 230px; }
+
+.vision { position: relative; padding: 100px 0 90px; overflow: hidden; }
+.vision-bg { position: absolute; inset: 0; }
+.vision-bg img { width: 100%; height: 140%; object-fit: cover; filter: grayscale(1) brightness(.3); }
+.vision-inner { position: relative; }
+.vision-head { margin-bottom: 320px; }
+/* "Design" starts a little left of its column so the note fits beside it, like the reference */
+.vision-head .giant-wrap > .giant:first-child { margin-left: -70px; }
+.vision-head .giant-note { right: 0; width: 210px; }
+@media (max-width: 809px) { .vision-head .giant-wrap > .giant:first-child { margin-left: 0; } }
+.principles { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line-d); padding-top: 22px; text-align: center; }
+.principle .h3 { margin-bottom: 14px; }
+.principle .body-s { max-width: 300px; margin: 0 auto; color: var(--pale); }
+
+.journey { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 110px 0 20px; }
+.journey-left .giant { font-size: clamp(56px, 7vw, 100px); }
+.journey-left .h2 { margin-bottom: 30px; }
+.journey-left .giant + .giant { margin-top: 10px; }
+.journey-list { padding-top: 10px; }
+/* the role column has a capped width so longer titles wrap onto a 2nd line for more breathing room,
+   instead of stretching the (auto-sized) column out to fit one long line */
+.job { display: grid; grid-template-columns: 1fr minmax(180px, 240px); grid-template-rows: auto auto; row-gap: 16px; padding: 18px 0 110px; position: relative; }
+.job::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-d); transform: scaleX(var(--p, 1)); transform-origin: left; }
+.job-year { font-family: var(--serif); font-size: 32px; letter-spacing: -0.03em; }
+.job-logo { height: 52px; width: auto; justify-self: end; opacity: .9; }
+/* company name in text (no real logo files) - same 52px row height as the image logos it replaces */
+.job-company {
+  display: flex; align-items: center; height: 52px;
+  font-family: var(--serif); font-size: 22px; letter-spacing: -0.02em; color: var(--pale);
+}
+.job .meta-d { grid-column: 2; text-align: right; color: var(--pale); line-height: 1.5; }
+
+/* Education entry: same row shape as a job, with a small icon badge instead of a company logo */
+.edu-label { margin: 44px 0 -4px; }
+.job-edu { padding-bottom: 30px; }
+.edu-icon { display: flex; align-items: center; justify-content: flex-end; height: 52px; color: var(--gold); }
+.edu-icon svg { width: 32px; height: 32px; }
+
+/* Resume download, under "My Experience" */
+.resume-btn { margin-top: 32px; align-self: flex-start; }
+
+/* pulled up under the timeline so the title is locked at screen-centre without a big empty gap before it */
+.beyond { position: relative; height: calc(1400px + 32vh); margin-top: -32vh; pointer-events: none; }
+.beyond-photos { top: 32vh; }
+.beyond-title { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.job:last-child { padding-bottom: 30px; }
+.beyond-title .giant { line-height: .9; }
+.beyond-title .giant:first-child { margin-left: -24%; }
+.beyond-g2 { margin-left: 16%; }
+.beyond-photos { position: absolute; left: 0; right: 0; bottom: 0; top: 32vh; pointer-events: none; }
+.bp { position: absolute; width: 350px; object-fit: cover; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.bp-1 { left: 36%; top: 330px; aspect-ratio: 350 / 400; }
+.bp-2 { left: 70%; top: 520px; width: 290px; aspect-ratio: 290 / 230; }
+.bp-3 { left: 12%; top: 700px; aspect-ratio: 350 / 396; }
+.bp-4 { left: 56%; top: 860px; aspect-ratio: 350 / 396; }
+.bp-5 { left: 36%; top: 1120px; width: 320px; aspect-ratio: 320 / 380; }
+
+/* ---------------- Works ---------------- */
+.page-works .works { padding-top: 180px; }
+.filters { position: relative; display: flex; gap: 34px; padding: 0 16px 17px; margin-bottom: 40px; border-bottom: 1px solid var(--line-d); overflow-x: auto; }
+.filter { font-family: var(--serif); font-size: 18px; letter-spacing: -0.03em; color: var(--pale); white-space: nowrap; transition: color .3s; }
+.filter:hover, .filter.active { color: var(--gold); }
+.filter-line { position: absolute; bottom: 0; left: 0; height: 1px; background: var(--gold); transition: left .5s cubic-bezier(.16,1,.3,1), width .5s cubic-bezier(.16,1,.3,1); }
+.work-card.is-hidden { display: none; }
+
+/* ---------------- Contact ---------------- */
+.contact-hero { min-height: 100vh; max-height: 980px; padding: 150px 0 120px; }
+.contact-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 564px; gap: 30px; align-items: stretch; }
+.contact-left { display: flex; flex-direction: column; justify-content: space-between; }
+.contact-giant { position: relative; padding-bottom: 10px; }
+.contact-giant .giant:first-child { padding-left: 2%; }
+.contact-g2 { padding-left: 32%; margin-top: 8px; }
+.contact-note { position: absolute; left: 52%; top: 36px; width: 210px; font-size: 14px; color: var(--pale); }
+.contact-card { background: #fff; padding: 16px; color: var(--ink); }
+.contact-card-in { border: 1px solid var(--line-l); padding: 26px 24px 24px; }
+.field { display: block; margin-bottom: 22px; }
+.field .meta { color: #a39c93; }
+.field .meta::before { display: none; }
+.field input, .field textarea {
+  display: block; width: 100%; margin-top: 16px; padding: 0 0 16px; border: 0; border-bottom: 1px solid var(--line-l);
+  background: transparent; font: 18px/1.4 var(--sans); letter-spacing: -0.02em; color: var(--ink); resize: vertical; outline: none;
+  transition: border-color .3s;
+}
+.field input::placeholder, .field textarea::placeholder { color: #6f6a68; }
+.field input:focus, .field textarea:focus { border-color: var(--gold); }
+.contact-foot { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.contact-foot p { font-size: 15px; color: var(--muted); line-height: 1.45; }
+.form-msg { margin-top: 14px; font-size: 14px; color: var(--gold); min-height: 1em; }
+
+/* ---------------- Blog ---------------- */
+.blog { padding-bottom: 120px; }
+.post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px 16px; }
+.post-card { display: block; }
+.post-img { overflow: hidden; aspect-ratio: 572 / 430; }
+.post-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s cubic-bezier(.16,1,.3,1), filter .6s; }
+.post-card:hover .post-img img { transform: scale(1.04); filter: brightness(.85); }
+.post-card .meta { margin: 20px 0 12px; }
+.post-card .h3 { transition: color .3s; }
+.post-card:hover .h3 { color: var(--gold); }
+.slash { margin: 0 6px; opacity: .6; }
+
+/* ---------------- Project detail ---------------- */
+.detail-brand { font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+.detail-title { display: grid; grid-template-columns: 1fr 470px; gap: 40px; align-items: end; margin-bottom: 48px; }
+.detail-title .body-s { font-size: 16px; color: var(--pale); }
+.detail-hero { position: relative; overflow: hidden; }
+.detail-hero img { width: 100%; aspect-ratio: 1160 / 700; object-fit: cover; }
+.detail-meta { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 24px; align-items: end; padding: 32px 0; border-bottom: 1px solid var(--line-d); }
+.dm-val { font-family: var(--serif); font-size: 22px; letter-spacing: -0.03em; margin-top: 10px; }
+.detail-intro { font-family: var(--serif); font-size: clamp(26px, 2.6vw, 38px); line-height: 1.12; letter-spacing: -0.03em; max-width: 900px; padding: 70px 0; }
+.detail-body { padding-bottom: 60px; }
+.dsec { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; padding: 70px 0; border-top: 1px solid var(--line-d); }
+.dsec .h3 { font-size: clamp(26px, 2.4vw, 36px); line-height: 1.1; margin-bottom: 22px; }
+.dsec .body-s { font-size: 16px; line-height: 1.55; max-width: 560px; }
+.detail-img { overflow: hidden; margin-bottom: 20px; }
+.detail-img img { width: 100%; aspect-ratio: 1160 / 720; object-fit: cover; }
+.detail-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 70px 0 40px; border-top: 1px solid var(--line-d); }
+.detail-stats .stat-num { font-size: 72px; }
+.detail-stats .meta-d { margin-top: 12px; }
+
+.more { padding: 60px 0 140px; }
+.more-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.more-grid .work-img.land { aspect-ratio: 572 / 380; }
+
+/* Works page: other projects - no case study, click through straight to the
+   live site (or GitHub/contact when there isn't one). A numbered index list;
+   hovering a row floats a preview image of that project near the cursor. */
+.plist { padding-top: 0; position: relative; }
+.plist-row {
+  display: flex; align-items: center; gap: 28px;
+  padding: 26px 0; position: relative; color: var(--pale);
+  transition: color .35s ease, padding-left .35s ease;
+}
+.plist-row::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-d);
+  transition: background .35s ease;
+}
+.plist-row:last-child::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line-d);
+}
+.plist-row:hover { color: var(--gold); padding-left: 16px; }
+.plist-row:hover::before { background: var(--gold); }
+.plist-num {
+  font-family: var(--mono); font-size: 13px; letter-spacing: .04em; color: var(--muted); flex: none; width: 32px;
+  transition: color .35s ease;
+}
+.plist-row:hover .plist-num { color: var(--gold); }
+.plist-title {
+  font-family: var(--serif); font-size: clamp(26px, 3.4vw, 40px); letter-spacing: -0.03em; flex: 1;
+  transition: transform .35s cubic-bezier(.16,1,.3,1);
+}
+.plist-row:hover .plist-title { transform: translateX(6px); }
+.plist-right { display: flex; align-items: center; gap: 18px; flex: none; }
+.plist-meta { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+.plist-row:hover .plist-meta { color: var(--pale); }
+.plist-arrow {
+  width: 20px; height: 20px; color: var(--gold);
+  transform: translate(-6px, 6px) rotate(-45deg); opacity: 0;
+  transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .3s ease;
+}
+.plist-row:hover .plist-arrow { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+
+/* floating preview image, follows the cursor while a row with a real
+   screenshot is hovered; hidden entirely on touch devices */
+.plist-preview {
+  position: fixed; z-index: 50; top: 0; left: 0; width: 280px; aspect-ratio: 16 / 10;
+  border-radius: 10px; overflow: hidden; pointer-events: none;
+  opacity: 0; transform: translate(-50%, -50%) scale(.92);
+  transition: opacity .3s ease, transform .3s cubic-bezier(.16,1,.3,1), left .1s linear, top .1s linear;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.6);
+  background: var(--card);
+}
+.plist-preview.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.plist-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 809px) {
+  .plist-row { flex-direction: column; align-items: flex-start; gap: 10px; padding-left: 0 !important; }
+  .plist-num { width: auto; }
+  .plist-right { align-self: stretch; justify-content: space-between; }
+  .plist-preview { display: none; }
+}
+@media (max-width: 809px) {
+  .smaller-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ---------------- Blog post ---------------- */
+.post { padding-bottom: 60px; }
+.post-head { width: min(760px, 100%); margin: 0 auto 40px; }
+.post-head .p-h1 { margin-top: 18px; }
+.post-hero { width: min(760px, 100%); margin: 0 auto 60px; overflow: hidden; }
+.post-hero img { width: 100%; aspect-ratio: 760 / 520; object-fit: cover; }
+.prose { width: min(640px, 100%); margin: 0 auto; }
+.prose p { font-size: 17px; line-height: 1.7; color: var(--pale); margin-bottom: 22px; }
+.prose h2 { font-family: var(--serif); font-weight: 400; font-size: 32px; letter-spacing: -0.03em; line-height: 1.1; margin: 56px 0 20px; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1100px) {
+  .origins { grid-template-columns: 1fr 1fr; }
+  .contact-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 809px) {
+  .p-top, .page-works .works { padding-top: 120px; }
+  /* a real full-height hero (not height:auto) so justify-content:flex-end actually pins the
+     text to the bottom of the screen instead of it just sitting under the header */
+  .about-hero { height: 100svh; min-height: 640px; }
+  .about-hero-inner { padding: 0 0 60px; }
+  .about-hero-note { margin-left: 0; }
+  .resume-btn { margin-top: 24px; }
+  .origins { grid-template-columns: 1fr; padding: 60px 0 90px; gap: 40px; }
+  .origins-giant .giant-note { position: static; width: 100%; margin-top: 20px; }
+  .vision-head { margin-bottom: 140px; }
+  .principles { grid-template-columns: 1fr; gap: 36px; text-align: left; }
+  .principle .body-s { margin: 0; }
+  .journey { grid-template-columns: 1fr; padding: 70px 0 10px; }
+  .job { grid-template-columns: 1fr minmax(120px, 160px); padding-bottom: 50px; }
+  .job-year { font-size: 26px; }
+  .edu-label { margin-top: 30px; }
+  /* Taller runway + no upward pull: on mobile the Journey section is already short, and the
+     sticky title needs real scroll distance for all 5 photos to fully pass before it releases -
+     too little room was cutting the animation short and spilling the section into the footer. */
+  .beyond { height: 2000px; margin-top: 0; }
+  .beyond-photos { top: 0; }
+  .bp { width: 170px; }
+  .bp-1 { left: 44%; top: 300px; } .bp-2 { left: 62%; top: 620px; width: 140px; }
+  .bp-3 { left: 6%; top: 940px; } .bp-4 { left: 50%; top: 1260px; } .bp-5 { left: 22%; top: 1580px; width: 160px; }
+  .beyond-title .giant:first-child, .beyond-g2 { margin-left: 0; }
+  .contact-hero { padding: 120px 0 70px; max-height: none; }
+  .contact-inner { grid-template-columns: 1fr; gap: 50px; }
+  .contact-left { gap: 48px; }
+  .contact-note { position: static; width: 100%; margin: 14px 0; }
+  .contact-g2 { padding-left: 18%; }
+  .contact-foot { flex-direction: column; align-items: flex-start; }
+  .post-grid { grid-template-columns: 1fr; gap: 44px; }
+  .detail-title, .dsec { grid-template-columns: 1fr; gap: 18px; }
+  .detail-meta { grid-template-columns: 1fr 1fr; }
+  .detail-stats { grid-template-columns: 1fr 1fr; gap: 36px 16px; }
+  .detail-stats .stat-num { font-size: 52px; }
+  .more-head { flex-direction: column; align-items: flex-start; gap: 20px; }
+}
