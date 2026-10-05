@@ -86,10 +86,10 @@
   const DOCK = `
   <aside class="dock" aria-label="Get in touch">
     <button type="button" class="dock-btn dock-primary" data-calendly="${CALENDLY_URL}">
-      <img src="https://raw.githubusercontent.com/MdRafiKhan738/developerrafikhan/main/assets/icons/calendly-icon.png" alt="" /><span>Book a meeting</span>
+      <img src="assets/icons/calendly-icon.png" alt="" /><span>Book a meeting</span>
     </button>
     <a href="mailto:kallol.business.ds@gmail.com" class="dock-btn dock-ghost">
-      <img src="https://raw.githubusercontent.com/MdRafiKhan738/developerrafikhan/main/assets/icons/gmail-icon.png" alt="" /><span>Email me</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
+      <img src="assets/icons/gmail-icon.png" alt="" /><span>Email me</span><i data-lucide="arrow-up-right" class="dock-arrow"></i>
     </a>
   </aside>`;
   document.body.insertAdjacentHTML('beforeend', DOCK);
