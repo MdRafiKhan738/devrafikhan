@@ -142,3 +142,32 @@ body.light .portrait-gray { filter:grayscale(1) contrast(.90) brightness(1.09) !
   .auth-shell,.guestbook-layout{grid-template-columns:1fr;}
   .auth-intro,.auth-card{min-height:auto;}
 }
+
+body.light .signature{filter:brightness(0) saturate(100%) invert(32%) sepia(58%) saturate(2927%) hue-rotate(248deg) brightness(88%) contrast(96%);}
+body.light .hero-quote b,
+body.light .avail b,
+body.light .price-card.dark,
+body.light .price-card.dark * { color:#211732 !important; }
+body.light .acc-services .acc-item.open .acc-head,
+body.light .acc-faq .acc-head,
+body.light .accordion .acc-head { color:#211732 !important; }
+body.light .h2,
+body.light .h3,
+body.light .h4,
+body.light .step-text h3,
+body.light .work-card .h3,
+body.light .all-works-txt { color:#211732; }
+body.light .meta,
+body.light .meta-d { color:#7b4cf6; }
+body.light .body-s,
+body.light .giant-note,
+body.light .contact-note,
+body.light .service-copy,
+body.light .footer-bottom,
+body.light .testi-slide .role { color:#71687e !important; }
+body.light .chip:hover { background:#fff; color:#211732; }
+body.light .chip:hover .chip-ico,
+body.light .chip.ghost:hover .chip-ico { background:#f2ecff; border-color:#d8c8f3; }
+body.light .framed{box-shadow:0 18px 60px rgba(79,47,133,.10);}
+body.light .services .acc-item{border-color:var(--line-l);}
+body.light .faq .acc-item{border-color:var(--line-l);}
