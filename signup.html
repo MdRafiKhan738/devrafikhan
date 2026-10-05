@@ -1,1 +1,50 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rafi Khan — Create account</title><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/rafi-theme.css"></head><body><div data-layout="header"></div><main><section class="p-hero" style="min-height:760px"><div class="container" style="padding-top:180px;padding-bottom:120px;max-width:760px"><p class="eyebrow gold hero-in">Portfolio access</p><h1 class="p-h1 hero-in">Create account</h1><form id="auth-form" class="contact-card hero-in"><div class="contact-card-in"><label class="field"><span class="meta">Name</span><input name="name" required placeholder="Your name"></label><label class="field"><span class="meta">Email</span><input name="email" type="email" required placeholder="Enter your email"></label><label class="field"><span class="meta">Password</span><input name="password" type="password" minlength="8" required placeholder="At least 8 characters"></label><div class="contact-foot"><p>Already registered? <a class="text-link" href="login.html">Sign in</a></p><button class="btn btn-outline dark" type="submit"><span class="btn-txt">Create account</span></button></div><p id="auth-msg" class="form-msg" aria-live="polite"></p></div></form></div></section><div data-layout="footer"></div></main><script src="js/layout.js"></script><script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script><script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/umd/gsap.min.js"></script><script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/umd/ScrollTrigger.min.js"></script><script>document.getElementById("auth-form").addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(e.currentTarget),m=document.getElementById("auth-msg");const endpoint='/signup';try{const r=await fetch("https://devrafikhanbackend.onrender.com/api/auth"+endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(f))});const d=await r.json();if(!r.ok)throw new Error(d.message||"Request failed");localStorage.setItem("rafi-token",d.token);m.textContent="Account created successfully.";setTimeout(()=>location.href="index.html",500)}catch(err){m.textContent=err.message}});</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create account — Mohammad Rafi Khan</title>
+<meta name="description" content="Create a portfolio account for Mohammad Rafi Khan's portfolio platform.">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/rafi-theme.css">
+</head>
+<body class="page-contact">
+<div data-layout="header"></div>
+<main>
+<section class="p-hero" style="min-height:820px">
+  <div class="container" style="padding-top:180px;padding-bottom:120px">
+    <div class="auth-shell">
+      <aside class="auth-intro hero-in">
+        <div>
+          <p class="eyebrow gold">Portfolio access</p>
+          <h1>Create<br><em>account.</em></h1>
+        </div>
+        <p>Create an account to interact with the portfolio platform and access its connected features.</p>
+      </aside>
+      <div class="auth-card hero-in">
+        <div class="contact-card-in">
+          <p class="meta">SIGN IN</p>
+          <h2 class="h2" style="margin:12px 0 34px">Your account</h2>
+          <form id="auth-form">
+            <label class="field"><span class="meta">Name</span><input name="name" type="text" required placeholder="Your name"></label><label class="field"><span class="meta">Email</span><input name="email" type="email" required placeholder="Enter your email"></label>
+            <label class="field" style="display:block;margin-top:20px"><span class="meta">Password</span><input name="password" type="password" required placeholder="Enter your password"></label>
+            <div class="contact-foot" style="margin-top:28px">
+              <p>Already registered? <a href="login.html" class="text-link">Sign in.</a></p>
+              <button class="btn btn-white" type="submit"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Create account</span></button>
+            </div>
+            <p id="auth-msg" class="form-msg" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div data-layout="footer"></div>
+</main>
+<script src="js/layout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script>
+const form=document.getElementById('auth-form');
+form.addEventListener('submit',async e=>{e.preventDefault();const msg=document.getElementById('auth-msg');try{const r=await fetch('https://devrafikhanbackend.onrender.com/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||'Unable to sign in.');localStorage.setItem('rafi-token',d.token);msg.textContent='Account created successfully.';setTimeout(()=>location.href='index.html',450)}catch(err){msg.textContent=err.message}});
+</script>
+</body></html>
