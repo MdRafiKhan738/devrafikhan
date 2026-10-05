@@ -1,4 +1,4 @@
-const API_BASE=(document.querySelector('meta[name="api-base"]')?.content||'/api').replace(/\/$/,'');
+const API_BASE=(document.querySelector('meta[name="api-base"]')?.content||'https://devrafikhanbackend.onrender.com/api').replace(/\/$/,'');
 const FALLBACK_PROJECTS=[];
 const FALLBACK_SITE={name:'Mohammad Rafi Khan',role:'Full-Stack Software Engineer',email:'',phone:'',location:'Dhaka, Bangladesh',socials:{},stack:['React','Next.js','Node.js','Express','MongoDB','Redis','React Native','TypeScript','Git','VS Code'],heroCopy:{eyebrow:'Hi, I’m Mohammad Rafi Khan',titleLineOne:'Full-Stack',titleLineTwo:'Software Engineer',description:'I build modern websites, web applications and backend systems with clean architecture, practical UX and production-ready engineering.',quote:'I help founders ship software that scales without turning the codebase into a fragile MVP.'},portraitImage:'assets/images/rafi-portrait.webp.b64',portraitColorImage:'assets/images/rafi-portrait.webp.b64',collabImage:'assets/images/rafi-portrait.webp.b64',signature:'Rafi Khan'};
 const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
