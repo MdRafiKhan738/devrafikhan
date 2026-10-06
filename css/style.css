@@ -255,29 +255,49 @@ ul { list-style: none; }
    The mask softly fades the bottom edge and the lower sides so the cut-out
    melts into the background instead of ending in a hard line. */
 .hero-portrait {
-  position: absolute; left: 50%; top: 0; translate: -50% 0; z-index: 2;
-  height: 741px; width: auto; aspect-ratio: var(--portrait-ratio, 2272 / 2964); pointer-events: none;
-  --fade-bottom-start: 58%; --fade-bottom-end: 97%; --fade-side: 14%;
+  position: absolute; left: 50%; top: 0; translate: -50% 0; z-index: 5;
+  width: min(568px, 46vw); height: 741px; aspect-ratio: 568 / 741;
+  pointer-events: none; isolation: isolate;
+  --fade-bottom-start: 58%; --fade-bottom-end: 98%; --fade-side: 12%;
   -webkit-mask-image:
     linear-gradient(to bottom, #000 var(--fade-bottom-start), transparent var(--fade-bottom-end)),
     linear-gradient(to right, transparent 0%, #000 var(--fade-side), #000 calc(100% - var(--fade-side)), transparent 100%);
   -webkit-mask-composite: source-in;
-          mask-image:
+  mask-image:
     linear-gradient(to bottom, #000 var(--fade-bottom-start), transparent var(--fade-bottom-end)),
     linear-gradient(to right, transparent 0%, #000 var(--fade-side), #000 calc(100% - var(--fade-side)), transparent 100%);
-          mask-composite: intersect;
+  mask-composite: intersect;
 }
-/* GSAP animates .portrait-anim only, so the outer box keeps its CSS centring on resize */
-/* layered drop-shadow that follows the cut-out silhouette, so it lifts off the ring */
-:root { --portrait-shadow: drop-shadow(0 12px 18px rgba(0,0,0,.35)) drop-shadow(-26px 10px 40px rgba(0,0,0,.4)) drop-shadow(8px 6px 14px rgba(0,0,0,.18)); }
-.portrait-anim { position: absolute; inset: 0; filter: var(--portrait-shadow); }
-.portrait-gray, .portrait-color { position: absolute; inset: 0; width: 100%; height: 100%; }
-.portrait-gray { filter: grayscale(1) contrast(.84) brightness(1.08); }
-.portrait-color { opacity: 0; } /* faded in/out by JS alongside the blob grow/shrink, not an instant swap */
-/* small screens have no hover, so show the hero portrait in full colour there */
+:root {
+  --portrait-shadow:
+    drop-shadow(0 12px 18px rgba(0,0,0,.28))
+    drop-shadow(-18px 12px 36px rgba(0,0,0,.18))
+    drop-shadow(8px 6px 16px rgba(0,0,0,.12));
+}
+.portrait-anim { position: absolute; inset: 0; filter: var(--portrait-shadow); overflow: visible; }
+.portrait-layer {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; object-fit: cover; object-position: center 24%;
+  user-select: none; -webkit-user-drag: none;
+}
+.portrait-gray { filter: grayscale(1) contrast(.88) brightness(1.08); }
+.portrait-color {
+  opacity: 0;
+  clip-path: circle(0% at 50% 38%);
+  transition: opacity .25s ease;
+  will-change: clip-path, opacity;
+}
+.portrait-glow {
+  position: absolute; inset: 4% 8% 12%; z-index: 3; pointer-events: none;
+  border-radius: 48% 52% 46% 54% / 40% 42% 58% 60%;
+  background: radial-gradient(circle at 50% 35%, rgba(123,76,246,.16), transparent 58%);
+  opacity: 0; transition: opacity .5s ease;
+}
+#portrait.is-hovering .portrait-glow { opacity: 1; }
 @media (max-width: 809px) {
-  .portrait-gray { filter: grayscale(1) contrast(.84) brightness(1.08); }
-  .portrait-color { display: none; }
+  .portrait-gray { filter: grayscale(1) contrast(.88) brightness(1.08); }
+  .portrait-color { opacity: 0; }
+  .portrait-glow { opacity: 0; }
 }
 .hero-fade {
   position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 3;
