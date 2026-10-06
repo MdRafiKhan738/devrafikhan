@@ -83,20 +83,9 @@
       <!-- Portrait: grayscale by default; a gooey blob reveals the colour version on hover -->
       <div class="hero-portrait" id="portrait">
         <div class="portrait-anim">
-        <img class="portrait-gray" src="assets/images/portrait-bw.png" alt="Portrait" />
-        <svg class="portrait-color" viewBox="0 0 2272 2964" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <!-- blur + alpha threshold = blobs melt together like liquid -->
-            <filter id="goo" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="44" result="blur" />
-              <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" />
-            </filter>
-            <mask id="goo-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="2272" height="2964">
-              <g filter="url(#goo)" id="goo-blobs"></g>
-            </mask>
-          </defs>
-          <image href="assets/images/portrait-2.png" x="0" y="0" width="2272" height="2964" preserveAspectRatio="xMidYMid slice" mask="url(#goo-mask)" />
-        </svg>
+          <img class="portrait-layer portrait-gray" src="assets/images/portrait-bw.png" alt="Portrait of Mohammad Rafi Khan" />
+          <img class="portrait-layer portrait-color" src="assets/images/portrait-2.png" alt="" aria-hidden="true" />
+          <span class="portrait-glow" aria-hidden="true"></span>
         </div>
       </div>
       <div class="hero-fade"></div>
@@ -238,7 +227,7 @@
         <p class="step-num">01<span>.</span></p>
         <div class="step-text"><h3 class="h2 white word-in">Understanding Your Requirements</h3>
           <p class="body-s word-in">We start by mapping out your goals, users, and technical constraints - what needs to be built, integrated, or improved from scratch.</p></div>
-        <div class="step-img"><img src="assets/images/aboutimg.jpg" data-cms-asset="assets/images/process/process-1.webp" alt="" /></div>
+        <div class="step-img"><img src="assets/images/aboutimg.jpg" data-cms-asset="assets/images/aboutimg.jpg" alt="" /></div>
       </div>
       <div class="step reveal">
         <p class="step-num">02<span>.</span></p>
