@@ -69,7 +69,7 @@
 
         <div class="footer-contact">
           <p class="meta">Mail</p><a href="mailto:nextjs061@gmail.com" data-site-email class="f-big flip">nextjs061@gmail.com</a>
-          <p class="meta">WhatsApp/Telegram</p><a href="#" data-site-phone target="_blank" rel="noopener" class="f-big flip">+880</a>
+          <p class="meta">WhatsApp/Telegram</p><a href="#" data-site-phone target="_blank" rel="noopener" class="f-big flip">8801989678448</a>
         </div>
         <div class="footer-social">${SOCIAL_TEXT}</div>
         <a href="contact.html" class="btn btn-white footer-btn"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Start a project</span></a>
