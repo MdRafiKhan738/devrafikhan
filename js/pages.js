@@ -128,5 +128,27 @@ gsap.utils.toArray('.bp').forEach((img) => {
   });
 })();
 
+/* ---------------- Blog: dynamic latest posts ---------------- */
+(async()=>{
+  const grid=document.querySelector('.post-grid');
+  if(!grid) return;
+  try{
+    const r=await fetch(API_BASE+'/blogs');
+    if(!r.ok) return;
+    const d=await r.json();
+    const posts=d.blogs||[];
+    if(!posts.length) return;
+    const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    grid.innerHTML=posts.map((p,i)=>`<a href="post.html?slug=${encodeURIComponent(p.slug)}" class="post-card reveal">
+      <div class="post-img"><img src="${esc(p.coverImage||'assets/images/projects/softunebd/hero.webp')}" alt="${esc(p.title)}" loading="${i<2?'eager':'lazy'}"></div>
+      <p class="meta">${esc(p.category||'Insight')} <span class="slash">/</span> ${new Date(p.publishedAt||p.createdAt).toLocaleDateString()}</p>
+      <h3 class="h3">${esc(p.title)}</h3>
+      <p class="body-s" style="margin-top:10px">${esc(p.excerpt||'')}</p>
+    </a>`).join('');
+    gsap.utils.toArray('.post-card.reveal').forEach(el=>gsap.from(el,{opacity:0,y:30,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+    ScrollTrigger.refresh();
+  }catch{}
+})();
+
 /* recalc once images have sized the page */
 addEventListener('load', () => ScrollTrigger.refresh());
