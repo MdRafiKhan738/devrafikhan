@@ -31,6 +31,7 @@
       <a href="blog.html" class="flip">Blog</a>
       <a href="resume.html" class="flip">Resume</a>
     </nav>
+    <div class="account-nav" id="accountNav"></div>
     <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
     <a href="contact.html" class="btn btn-outline hide-m"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Start a project</span></a>
     <button class="burger show-m" aria-label="Menu"><i class="burger-lines"><span></span><span></span></i></button>
@@ -131,6 +132,85 @@
   try { savedTheme = localStorage.getItem('rafi-theme') || 'dark'; } catch {}
   applyTheme(savedTheme === 'light');
   document.querySelectorAll('#themeToggle').forEach((b) => b.addEventListener('click', () => applyTheme(!document.body.classList.contains('light'))));
+
+  const ACCOUNT_API = API;
+  const readLocalToken = () => { try { return localStorage.getItem('rafi-token') || ''; } catch { return ''; } };
+  const saveLocalUser = (u) => { try { localStorage.setItem('rafi-user', JSON.stringify(u)); } catch {} };
+  const clearLocalUser = () => { try { localStorage.removeItem('rafi-token'); localStorage.removeItem('rafi-name'); localStorage.removeItem('rafi-user'); } catch {} };
+  let accountUser = null;
+
+  const renderAccount = (user) => {
+    const nav = document.getElementById('accountNav');
+    if (!nav) return;
+    if (!user) {
+      nav.innerHTML = '<a class="account-login-link" href="login.html">Sign in</a>';
+      return;
+    }
+    const initials = String(user.name||'U').trim().split(/\\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    nav.innerHTML = `
+      <button type="button" class="account-trigger" id="accountTrigger" aria-expanded="false">
+        ${user.profileImage ? `<img src="${user.profileImage}" alt="">` : `<span class="account-initials">${initials}</span>`}
+        <span class="account-trigger-name">${String(user.name||'Account').replace(/[<>&"]/g,'')}</span>
+        <i data-lucide="chevron-down"></i>
+      </button>
+      <aside class="account-panel" id="accountPanel" aria-hidden="true">
+        <div class="account-panel-head">
+          <div class="account-panel-avatar">${user.profileImage ? `<img src="${user.profileImage}" alt="">` : initials}</div>
+          <div><strong>${String(user.name||'Account').replace(/[<>&"]/g,'')}</strong><span>${String(user.email||'')}</span></div>
+        </div>
+        <div class="account-panel-grid">
+          <button data-account-tab="activity">Activity</button>
+          <button data-account-tab="notifications">Notifications</button>
+          <button data-account-tab="settings">Account settings</button>
+        </div>
+        <div class="account-panel-content" id="accountPanelContent"><p class="muted">Loading your account…</p></div>
+        <button type="button" class="account-logout" id="accountLogout"><i data-lucide="log-out"></i> Logout</button>
+      </aside>`;
+    const trigger=document.getElementById('accountTrigger'),panel=document.getElementById('accountPanel');
+    trigger?.addEventListener('click',()=>{const open=panel.classList.toggle('open');trigger.setAttribute('aria-expanded',String(open));panel.setAttribute('aria-hidden',String(!open));});
+    document.querySelectorAll('[data-account-tab]').forEach(btn=>btn.addEventListener('click',()=>loadAccountTab(btn.dataset.accountTab)));
+    document.getElementById('accountLogout')?.addEventListener('click',async()=>{try{const t=readLocalToken();await fetch(ACCOUNT_API+'/auth/logout',{method:'POST',credentials:'include',headers:t?{Authorization:'Bearer '+t}:{}})}catch{}clearLocalUser();renderAccount(null);location.href='index.html';});
+    window.lucide?.createIcons?.();
+  };
+
+  async function accountFetch(path,opt={}) {
+    const t=readLocalToken();
+    const headers={...(opt.headers||{})};
+    if(t) headers.Authorization='Bearer '+t;
+    const r=await fetch(ACCOUNT_API+path,{...opt,credentials:'include',headers});
+    const d=await r.json().catch(()=>({}));
+    if(r.status===401){clearLocalUser();renderAccount(null);return null}
+    if(!r.ok) throw new Error(d.message||'Request failed');
+    return d;
+  }
+
+  async function loadAccountTab(tab) {
+    const box=document.getElementById('accountPanelContent'); if(!box) return;
+    if(tab==='settings'){
+      box.innerHTML=`
+        <form id="accountProfileForm" class="account-settings-form">
+          <label>Display name<input name="name" value="${String(accountUser?.name||'').replace(/"/g,'&quot;')}" maxlength="100"></label>
+          <label>About you<textarea name="bio" maxlength="500">${String(accountUser?.bio||'').replace(/</g,'&lt;')}</textarea></label>
+          <label class="account-upload">Profile picture<input id="accountAvatar" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <button class="btn btn-white" type="submit">Save settings</button>
+        </form>`;
+      document.getElementById('accountProfileForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;try{const d=await accountFetch('/account/profile',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name.value,bio:f.bio.value})});if(d?.user){accountUser=d.user;saveLocalUser(accountUser);renderAccount(accountUser);document.getElementById('accountPanel')?.classList.add('open');loadAccountTab('settings')}}catch(err){box.insertAdjacentHTML('beforeend',`<p class="form-msg">${err.message}</p>`)}});
+      document.getElementById('accountAvatar')?.addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;const fd=new FormData();fd.append('file',file);try{const d=await accountFetch('/account/avatar',{method:'POST',body:fd});if(d?.user){accountUser=d.user;saveLocalUser(accountUser);renderAccount(accountUser);document.getElementById('accountPanel')?.classList.add('open');loadAccountTab('settings')}}catch(err){box.insertAdjacentHTML('beforeend',`<p class="form-msg">${err.message}</p>`)}});
+      return;
+    }
+    const path=tab==='notifications'?'/account/notifications':'/account/activities';
+    const d=await accountFetch(path); const rows=d?.activities||d?.notifications||[];
+    box.innerHTML=rows.length?rows.map(x=>`<div class="account-feed-item"><strong>${String(x.title||x.label||x.type||'Activity')}</strong><span>${new Date(x.createdAt).toLocaleString()}</span></div>`).join(''):'<p class="muted">No activity yet.</p>';
+  }
+
+  async function hydrateAccount() {
+    try {
+      const d=await accountFetch('/auth/me');
+      if(d?.user){accountUser=d.user;saveLocalUser(accountUser);renderAccount(accountUser);loadAccountTab('activity');}
+      else renderAccount(null);
+    } catch { renderAccount(null); }
+  }
+  hydrateAccount();
 
   // Local clock is always Dhaka time so auth/guestbook/footer never show a blank clock.
   const tickClock = () => {
