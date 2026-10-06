@@ -31,9 +31,8 @@
       <a href="blog.html" class="flip">Blog</a>
       <a href="resume.html" class="flip">Resume</a>
     </nav>
-    <button type="button" class="theme-toggle hide-m" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">◐</button>
     <a href="contact.html" class="btn btn-outline hide-m"><span class="btn-ico"><i data-lucide="arrow-right"></i></span><span class="btn-txt">Start a project</span></a>
-    <button type="button" class="theme-toggle show-m" id="themeToggleMobile" aria-label="Toggle light and dark mode">◐</button>
     <button class="burger show-m" aria-label="Menu"><i class="burger-lines"><span></span><span></span></i></button>
   </header>
 
@@ -64,7 +63,7 @@
         <p class="meta avail">Available for projects</p>
         <p class="collab gold">Let's Collab</p>
         <div class="footer-portrait">
-          <img class="fp-img" src="assets/images/protrait-bw.jpg" alt="" onerror="this.onerror=null;this.src='assets/images/portrait-2.png';" />
+          <img class="fp-img" src="assets/images/portrait-bw.png" alt="" />
         </div>
 
         <div class="footer-contact">
@@ -126,12 +125,12 @@
   const applyTheme = (light) => {
     document.body.classList.toggle('light', light);
     try { localStorage.setItem('rafi-theme', light ? 'light' : 'dark'); } catch {}
-    document.querySelectorAll('#themeToggle,#themeToggleMobile').forEach((b) => { b.textContent = light ? '☾' : '◐'; });
+    document.querySelectorAll('#themeToggle').forEach((b) => { b.textContent = light ? '☾' : '◐'; });
   };
   let savedTheme = 'dark';
   try { savedTheme = localStorage.getItem('rafi-theme') || 'dark'; } catch {}
   applyTheme(savedTheme === 'light');
-  document.querySelectorAll('#themeToggle,#themeToggleMobile').forEach((b) => b.addEventListener('click', () => applyTheme(!document.body.classList.contains('light'))));
+  document.querySelectorAll('#themeToggle').forEach((b) => b.addEventListener('click', () => applyTheme(!document.body.classList.contains('light'))));
 
   // Local clock is always Dhaka time so auth/guestbook/footer never show a blank clock.
   const tickClock = () => {
