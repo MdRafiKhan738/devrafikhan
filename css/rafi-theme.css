@@ -316,12 +316,12 @@ body.light .account-trigger{color:#211732;background:#fff;border-color:rgba(44,2
 body.light .account-panel{background:rgba(255,255,255,.98);color:#211732;border-color:rgba(44,27,73,.12);box-shadow:0 24px 80px rgba(79,47,133,.16);}
 body.light .account-panel-head{border-color:rgba(44,27,73,.1);}
 body.light .account-panel-head strong{color:#211732;}
-body.light .account-panel-head span,.body.light .account-feed-item span{color:#71687e;}
+body.light .account-panel-head span,.account-feed-item span{color:#71687e;}
 body.light .account-panel-grid button{color:#211732;border-color:rgba(44,27,73,.12);background:#faf8ff;}
 body.light .account-feed-item{border-color:rgba(44,27,73,.09);}
 body.light .account-feed-item strong{color:#211732;}
 body.light .account-settings-form label{color:#675d70;}
-body.light .account-settings-form input,.body.light .account-settings-form textarea{background:#faf8ff;color:#211732;border-color:rgba(44,27,73,.14);}
+body.light .account-settings-form input,.account-settings-form textarea{background:#faf8ff;color:#211732;border-color:rgba(44,27,73,.14);}
 body.light .account-logout{color:#9b3030;border-color:rgba(155,48,48,.18);}
 /* Strong quote contrast inside dark manifesto blocks, including light mode */
 .manifesto-quote{background:#211732;color:#fff!important;border-radius:24px;padding:42px;box-shadow:0 24px 80px rgba(31,20,46,.18);}
