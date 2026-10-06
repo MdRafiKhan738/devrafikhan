@@ -336,96 +336,50 @@ gsap.utils.toArray('.all-works .wimg').forEach((el) =>
 );
 
 /* ---------------------------------------------------------
-   Portrait: grayscale, with a gooey colour reveal on hover
-   A chain of blobs trails the cursor (each one chasing the one before it),
-   two small satellites orbit the lead blob, and the SVG "goo" filter melts
-   them into one liquid shape that masks in the colour photo.
+   Portrait: grayscale by default, smooth color reveal on hover
    --------------------------------------------------------- */
 (() => {
   const wrap = document.getElementById('portrait');
-  if (!wrap) return; // home page only
-  const gray = wrap.querySelector('.portrait-gray');
-  const svg = wrap.querySelector('.portrait-color');
-  const image = svg.querySelector('image');
-  const mask = svg.querySelector('mask');
-  const group = document.getElementById('goo-blobs');
-  const NS = 'http://www.w3.org/2000/svg';
+  if (!wrap) return;
 
-  let VBW = 2272, VBH = 2964; // replaced by the real image size once it loads
-  function fitToImage() {
-    if (!gray.naturalWidth) return;
-    VBW = gray.naturalWidth; VBH = gray.naturalHeight;
-    svg.setAttribute('viewBox', `0 0 ${VBW} ${VBH}`);
-    [image, mask].forEach((el) => { el.setAttribute('width', VBW); el.setAttribute('height', VBH); });
-    wrap.style.setProperty('--portrait-ratio', `${VBW} / ${VBH}`);
-  }
-  gray.complete ? fitToImage() : gray.addEventListener('load', fitToImage);
+  const color = wrap.querySelector('.portrait-color');
+  if (!color) return;
 
-  const make = () => {
-    const c = document.createElementNS(NS, 'circle');
-    c.setAttribute('fill', '#fff'); c.setAttribute('r', 0);
-    group.appendChild(c);
-    return { el: c, x: 0, y: 0 };
-  };
-  // lead blob + tail (sizes shrink along the tail) + 2 orbiting satellites
-  const TAIL = [1, 0.86, 0.74, 0.62, 0.5, 0.4];
-  const chain = TAIL.map(make);
-  const sats = [make(), make()];
+  const state = { cx: 50, cy: 38, tx: 50, ty: 38, r: 0, tr: 0 };
+  let inside = false;
 
-  const state = { r: 0, inside: false };
-  const target = { x: 0, y: 0 };
-
-  function toLocal(e) {
+  const point = (e) => {
     const b = wrap.getBoundingClientRect();
-    return { b, x: ((e.clientX - b.left) / b.width) * VBW, y: ((e.clientY - b.top) / b.height) * VBH,
-      inside: e.clientX > b.left && e.clientX < b.right && e.clientY > b.top && e.clientY < b.top + b.height * 0.85 };
-  }
-  function enter(p) {
-    state.inside = true;
-    if (state.r < 0.05) [...chain, ...sats].forEach((c) => { c.x = p.x; c.y = p.y; }); // start at the cursor
-    gsap.to(state, { r: 1, duration: 1.6, ease: 'power2.out', overwrite: true });
-    gsap.to(svg, { opacity: 1, duration: 1.3, ease: 'power1.out', overwrite: true });
-  }
-  function leave() {
-    state.inside = false;
-    gsap.to(state, { r: 0, duration: 1.1, ease: 'power2.inOut', overwrite: true });
-    gsap.to(svg, { opacity: 0, duration: 1, ease: 'power1.in', overwrite: true });
-  }
-  window.addEventListener('pointermove', (e) => {
-    const p = toLocal(e);
-    if (menu.classList.contains('on')) p.inside = false; // the open menu covers the portrait
-    target.x = p.x; target.y = p.y;
-    if (p.inside && !state.inside) enter(p);
-    else if (!p.inside && state.inside) leave();
-  });
-  window.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse' && state.inside) leave(); });
-  document.addEventListener('mouseleave', () => state.inside && leave());
+    state.tx = Math.max(4, Math.min(96, ((e.clientX - b.left) / b.width) * 100));
+    state.ty = Math.max(4, Math.min(86, ((e.clientY - b.top) / b.height) * 100));
+  };
 
-  gsap.ticker.add((time) => {
-    if (state.r < 0.001 && !state.inside) { chain.concat(sats).forEach((c) => c.el.setAttribute('r', 0)); return; }
-    const pxToUnits = VBW / wrap.getBoundingClientRect().width;
-    const base = (window.innerWidth < 810 ? 85 : 135) * pxToUnits * state.r; // blob radius in image units
+  const enter = (e) => {
+    inside = true;
+    wrap.classList.add('is-hovering');
+    point(e);
+    state.tr = 1;
+  };
 
-    // each blob chases the one in front of it -> stretchy liquid tail
-    chain.forEach((c, i) => {
-      const lead = i === 0 ? target : chain[i - 1];
-      const k = i === 0 ? 0.3 : 0.32;
-      c.x += (lead.x - c.x) * k; c.y += (lead.y - c.y) * k;
-      const wobble = 1 + 0.06 * Math.sin(time * 3 + i);
-      c.el.setAttribute('cx', c.x); c.el.setAttribute('cy', c.y);
-      c.el.setAttribute('r', base * TAIL[i] * wobble);
-    });
-    // satellites orbit the lead blob and pulse, so the edge keeps "breathing"
-    sats.forEach((s, i) => {
-      const a = time * (i ? -1.6 : 1.2) + i * Math.PI;
-      const d = base * (0.95 + 0.15 * Math.sin(time * 2.3 + i));
-      s.x = chain[0].x + Math.cos(a) * d; s.y = chain[0].y + Math.sin(a) * d;
-      s.el.setAttribute('cx', s.x); s.el.setAttribute('cy', s.y);
-      s.el.setAttribute('r', base * (0.42 + 0.08 * Math.sin(time * 4 + i)));
-    });
+  const leave = () => {
+    inside = false;
+    wrap.classList.remove('is-hovering');
+    state.tr = 0;
+  };
+
+  wrap.addEventListener('pointerenter', enter);
+  wrap.addEventListener('pointermove', point);
+  wrap.addEventListener('pointerleave', leave);
+
+  gsap.ticker.add(() => {
+    state.cx += (state.tx - state.cx) * 0.18;
+    state.cy += (state.ty - state.cy) * 0.18;
+    state.r += (state.tr - state.r) * 0.13;
+    const radius = 18 + state.r * 34;
+    color.style.clipPath = `circle(${radius}% at ${state.cx}% ${state.cy}%)`;
+    color.style.opacity = String(Math.min(1, state.r * 1.15));
   });
 })();
-
 /* ---------------------------------------------------------
    Generic fade-up reveals
    --------------------------------------------------------- */
