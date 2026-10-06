@@ -162,6 +162,7 @@
           <button data-account-tab="activity">Activity</button>
           <button data-account-tab="notifications">Notifications</button>
           <button data-account-tab="settings">Account settings</button>
+          ${['admin','editor'].includes(user.role)?'<button type="button" class="account-dashboard-link" id="accountDashboardLink">Admin Dashboard</button>':''}
         </div>
         <div class="account-panel-content" id="accountPanelContent"><p class="muted">Loading your account…</p></div>
         <button type="button" class="account-logout" id="accountLogout"><i data-lucide="log-out"></i> Logout</button>
@@ -169,6 +170,7 @@
     const trigger=document.getElementById('accountTrigger'),panel=document.getElementById('accountPanel');
     trigger?.addEventListener('click',()=>{const open=panel.classList.toggle('open');trigger.setAttribute('aria-expanded',String(open));panel.setAttribute('aria-hidden',String(!open));});
     document.querySelectorAll('[data-account-tab]').forEach(btn=>btn.addEventListener('click',()=>loadAccountTab(btn.dataset.accountTab)));
+    document.getElementById('accountDashboardLink')?.addEventListener('click',()=>location.href='admin.html');
     document.getElementById('accountLogout')?.addEventListener('click',async()=>{try{const t=readLocalToken();await fetch(ACCOUNT_API+'/auth/logout',{method:'POST',credentials:'include',headers:t?{Authorization:'Bearer '+t}:{}})}catch{}clearLocalUser();renderAccount(null);location.href='index.html';});
     window.lucide?.createIcons?.();
   };
