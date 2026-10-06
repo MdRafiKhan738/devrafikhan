@@ -375,7 +375,7 @@ gsap.utils.toArray('.all-works .wimg').forEach((el) =>
     state.cx += (state.tx - state.cx) * 0.18;
     state.cy += (state.ty - state.cy) * 0.18;
     state.r += (state.tr - state.r) * 0.13;
-    const radius = 18 + state.r * 34;
+    const radius = 18 + state.r * 100;
     color.style.clipPath = `circle(${radius}% at ${state.cx}% ${state.cy}%)`;
     color.style.opacity = String(Math.min(1, state.r * 1.15));
   });
