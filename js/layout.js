@@ -151,8 +151,8 @@
   const pathMap = {
     'assets/images/site/signature.svg': 'assets/images/signature.png',
     'assets/images/site/rafi-signature.svg': 'assets/images/signature.png',
-    'assets/images/site/portrait.webp': 'assets/images/protrait-bw.jpg',
-    'assets/images/site/portrait-bw.webp': 'assets/images/protrait-bw.jpg',
+    'assets/images/site/portrait.webp': 'assets/images/portrait-bw.png',
+    'assets/images/site/portrait-bw.webp': 'assets/images/portrait-bw.png',
     'assets/images/site/portrait-2.webp': 'assets/images/portrait-2.png',
     'assets/images/site/allworks.webp': 'assets/images/projects/softunebd/hero.webp',
     'assets/images/allworks.webp': 'assets/images/projects/softunebd/hero.webp',
@@ -198,9 +198,13 @@
       if (!r.ok) return;
       const d = await r.json();
       const map = new Map((d.assets || []).map((a) => [a.key, a]));
-      document.querySelectorAll('img[src],video[src],source[src]').forEach((el) => {
-        const a = map.get(el.getAttribute('src') || '');
-        if (a?.url) el.setAttribute('src', a.url);
+      document.querySelectorAll('img[src],video[src],source[src],image[href]').forEach((el) => {
+        const key = el.getAttribute('src') || el.getAttribute('href') || '';
+        const a = map.get(key);
+        if (a?.url) {
+          if (el.hasAttribute('href')) el.setAttribute('href', a.url);
+          else el.setAttribute('src', a.url);
+        }
       });
       document.querySelectorAll('[data-cms-asset]').forEach((el) => {
         const a = map.get(el.dataset.cmsAsset);
