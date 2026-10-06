@@ -327,3 +327,7 @@ body.light .account-logout{color:#9b3030;border-color:rgba(155,48,48,.18);}
 .manifesto-quote{background:#211732;color:#fff!important;border-radius:24px;padding:42px;box-shadow:0 24px 80px rgba(31,20,46,.18);}
 .manifesto-quote *{color:#fff!important;}
 @media(max-width:809px){.account-trigger-name{display:none}.account-panel{right:-52px}.site-header{grid-template-columns:1fr auto auto auto;gap:8px;}}
+
+.signature{filter:contrast(1.28) brightness(.92) drop-shadow(0 1px 0 rgba(0,0,0,.16));}
+body.light .signature{filter:contrast(1.4) brightness(.78) drop-shadow(0 1px 0 rgba(109,40,217,.12));}
+.account-dashboard-link{grid-column:1/-1;padding:10px;border-radius:10px;background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#fff;font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;}
