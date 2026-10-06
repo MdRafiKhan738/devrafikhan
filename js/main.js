@@ -756,5 +756,3 @@ window.addEventListener('resize', fitCollab);
 
 /* Recalculate positions once images have loaded */
 window.addEventListener('load', () => { fitCollab(); ScrollTrigger.refresh(); });
-
-(async()=>{try{const r=await fetch("assets/images/rafi-portrait.webp.b64");if(!r.ok)return;const src="data:image/webp;base64,"+(await r.text()).trim();document.querySelectorAll(".portrait-gray,.fp-img").forEach(i=>i.src=src);document.querySelectorAll(".portrait-color image").forEach(i=>i.setAttribute("href",src));}catch(e){console.warn("Rafi portrait load failed",e);}})();
