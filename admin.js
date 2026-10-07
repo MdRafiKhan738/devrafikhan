@@ -1,6 +1,26 @@
-const API=(document.querySelector('meta[name="api-base"]')?.content||'https://devrafikhanbackend.onrender.com/api').replace(/\/$/,'');const token=localStorage.getItem('rafi-token');if(!token)location.href='login.html';
+const API=(document.querySelector('meta[name="api-base"]')?.content||'https://devrafikhanbackend.onrender.com/api').replace(/\/$/,'');
+let token='';
+const readToken=()=>{try{return localStorage.getItem('rafi-token')||''}catch{return ''}};
+const clearAuth=()=>{try{localStorage.removeItem('rafi-token');localStorage.removeItem('rafi-name');localStorage.removeItem('rafi-user')}catch{}};
+async function whoAmI(){
+  const t=readToken();
+  if(t){
+    try{
+      const r=await fetch(API+'/auth/me',{credentials:'include',headers:{Authorization:'Bearer '+t}});
+      if(r.ok){const d=await r.json();return d.user||null}
+    }catch{}
+    clearAuth();
+  }
+  try{
+    const r=await fetch(API+'/auth/me',{credentials:'include'});
+    if(!r.ok)return null;
+    const d=await r.json();
+    if(d.user){token=d.user.token||readToken();try{localStorage.setItem('rafi-user',JSON.stringify(d.user))}catch{}}
+    return d.user||null;
+  }catch{return null}
+}
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const $=s=>document.querySelector(s);let DATA={};
-async function api(path,opt={}){const h={Authorization:'Bearer '+token,...(opt.headers||{})};if(!(opt.body instanceof FormData))h['Content-Type']='application/json';const r=await fetch(API+path,{...opt,headers:h});const d=await r.json().catch(()=>({}));if(r.status===401||r.status===403){localStorage.removeItem('rafi-token');location.href='login.html';return null}if(!r.ok)throw new Error(d.message||'Request failed');return d}
+async function api(path,opt={}){const t=readToken();const h={...(opt.headers||{})};if(t)h.Authorization='Bearer '+t;if(!(opt.body instanceof FormData))h['Content-Type']='application/json';const r=await fetch(API+path,{...opt,credentials:'include',headers:h});const d=await r.json().catch(()=>({}));if(r.status===401){clearAuth();location.href='login.html';return null}if(r.status===403)throw new Error(d.message||'Admin permission required');if(!r.ok)throw new Error(d.message||'Request failed');return d}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
 function openTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===id))}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));$('#logout').onclick=()=>{localStorage.removeItem('rafi-token');location.href='login.html'};
@@ -44,4 +64,4 @@ async function loadReactions(){const r=await api('/admin/reactions/homepage');$(
 async function loadLove(){try{const r=await fetch(API+'/reactions/homepage');const d=await r.json();$('#loveCount').textContent=d.count;$('#baseLove').value=(DATA||{}).baseCount||''}catch{}}
 window.saveBaseLove=async()=>{await api('/admin/reactions/homepage',{method:'PUT',body:JSON.stringify({baseCount:Number($('#baseLove').value||0)})});toast('Base love count saved');loadLove()}
 function renderSite(s){const f=$('#siteForm');f.innerHTML=[['name','Name'],['role','Role'],['email','Email'],['phone','Phone'],['location','Location'],['signature','Signature']].map(([k,l])=>`<label class="field">${l}<input class="input" name="${k}" value="${esc(s[k]||'')}"></label>`).join('')+`<label class="field wide">Hero eyebrow<input class="input" name="eyebrow" value="${esc(s.heroCopy?.eyebrow||'')}"></label><label class="field wide">Hero title line 1<input class="input" name="titleLineOne" value="${esc(s.heroCopy?.titleLineOne||'')}"></label><label class="field wide">Hero title line 2<input class="input" name="titleLineTwo" value="${esc(s.heroCopy?.titleLineTwo||'')}"></label><label class="field wide">Hero description<textarea class="textarea" name="description">${esc(s.heroCopy?.description||'')}</textarea></label><label class="field wide">Hero quote<textarea class="textarea" name="quote">${esc(s.heroCopy?.quote||'')}</textarea></label><label class="field wide">Tech stack<input class="input" name="stack" value="${esc((s.stack||[]).join(', '))}"></label><div class="actions wide"><button class="btn btn-white">Save site content</button></div>`;f.onsubmit=async e=>{e.preventDefault();const q=e.currentTarget;const heroCopy={...(s.heroCopy||{}),eyebrow:q.eyebrow.value,titleLineOne:q.titleLineOne.value,titleLineTwo:q.titleLineTwo.value,description:q.description.value,quote:q.quote.value};await api('/admin/site',{method:'PUT',body:JSON.stringify({name:q.name.value,role:q.role.value,email:q.email.value,phone:q.phone.value,location:q.location.value,signature:q.signature.value,stack:arr(q.stack.value),heroCopy})});toast('Site content saved');load()}}
-load().catch(e=>toast(e.message));
+(async()=>{const user=await whoAmI();if(!user){location.href='login.html';return}if(!['admin','editor'].includes(user.role)){toast('Admin permission required');setTimeout(()=>location.href='index.html',900);return}load().catch(e=>toast(e.message))})();
